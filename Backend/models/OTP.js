@@ -16,5 +16,23 @@ const OTPSchema = new mongoose.Schema({
         expires:5*60,
     }
 });
+
+//function to 'send OTP mail'
+
+async function sendVerificationEmail(email,otp){
+    try{
+        const mailResponse = await  mailSender(email,"Verification Email from StudyNotion",otp);
+        console.log("Email send successfully: ", mailResponse);
+    }catch(error){
+        console.log(`error occured while sending mail:`, error);
+        throw error;
+    }
+}
+
+OTPSchema.pre("save",async function(next){
+    await sendVerificationEmail(this.email, this.otp);
+    next();
+})
+
 module.exports = mongoose.model("OTP",OTPSchema);
 
