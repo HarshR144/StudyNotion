@@ -128,7 +128,6 @@ exports.signUpHandler = async(req,res)=>{
             lastName,
             email,
             password:hashedPassword,
-            confirmPassword:hashedPassword,
             accountType,
         additionalDetails:profileDetails._id,
         image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`, 
