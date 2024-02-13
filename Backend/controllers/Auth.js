@@ -211,32 +211,47 @@ exports.loginHandler = async(req,res) =>{
 }
 //change password
 exports.changePassword = async (req,res)=>{
-    //get data prev password ,new pass, confirmnew pass, email
-    const {email, oldPassword, newPassword, newConfirmPassword} = req.body;
-    //validation
-    if(!email || !oldPassword || !newPassword || !newConfirmPassword){
-        return res.status(403).json({
-            success:false,
-            message:"All fields  are required, please try again"
-        })
-    }
-    if (newPassword !== newConfirmPassword){
-        return res.status(400).json({
-            success:false,
-            message:"Password  and confirmPassword value does not match, please try again",
+    try{
+        //get data prev password ,new pass, confirmnew pass, email
+        const {email, oldPassword, newPassword, newConfirmPassword} = req.body;
+        //validation
+        if(!email || !oldPassword || !newPassword || !newConfirmPassword){
+            return res.status(403).json({
+                success:false,
+                message:"All fields  are required, please try again"
+            })
+        }
+        if (newPassword !== newConfirmPassword){
+            return res.status(400).json({
+                success:false,
+                message:"Password  and confirmPassword value does not match, please try again",
+            });
+        }
+         //hash password
+         const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        //update password in db
+        const updateResult = await User.findOneAndUpdate({email:email},
+            {password:hashedPassword},{new:true});
+        //send password update mail
+        const mailResponse = await mailSender(email,"User Password Changed",`Password changed for ${email}`);
+        if(!mailResponse){
+            return res.status(500).json({
+                success:false,
+                message:"Error occured while sending mail"
+            })
+        }
+        // return response
+        res.status(200).json({
+            success:true,
+            message:"Password change Successfully",
         });
-    }
-    //update password in db
-    const updateResult = await User.findOneAndUpdate({email},
-        {password:newPassword,confirmPassword:newConfirmPassword});
-    //send password update mail
-    const mailResponse = await mailSender(email,"User Password Changed",`Password changed for ${email}`);
-    if(!mailResponse){
+
+    }catch(error){
+        console.log(error);
         return res.status(500).json({
             success:false,
-            message:"Error occured while sending mail"
+            message:"Password change failed, Something went wrong",
         })
     }
-    // return response
-
 }
