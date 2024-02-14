@@ -15,6 +15,11 @@ const profileSchema = new mongoose.Schema({
         type:Number,
         trim:true,
     },
+    profession:{
+        type:String,    
+    },
+    
+
     
 
 
