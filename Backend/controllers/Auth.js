@@ -4,6 +4,10 @@ const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const mailSender = require("../utils/mailSender");
+const {passwordUpdated} = require("../mail/templates/passwordUpdate");
+const Profile = require("../models/Profile");
+
 
 //sendOTP
 exports.sendOTP = async (req,res)=>{
@@ -11,7 +15,7 @@ exports.sendOTP = async (req,res)=>{
         // fetch email from req body
         const {email} = req.body;
 
-        //check if user alreaady exists
+        //check if user already exists for the provided email
         const checkUserPresent = await User.findOne({email});
         //if user exists then
         if(checkUserPresent){
@@ -27,7 +31,7 @@ exports.sendOTP = async (req,res)=>{
             specialChars:false,
         });
         console.log("OTP generated: ",otp);
-        //check if geerated otp is unique
+        //check if generated otp is unique
         let result = await OTP.findOne({otp: otp});
         while(result){
             otp = otpGenerator.generate(6,{
@@ -49,7 +53,7 @@ exports.sendOTP = async (req,res)=>{
         })
 
     }catch(error){
-        console.log(error);
+        console.log(error.message);
         return res.status(500).json({
             success:false,
             message:error.message,
@@ -86,14 +90,14 @@ exports.signUpHandler = async(req,res)=>{
         if (password !== confirmPassword){
             return res.status(400).json({
                 success:false,
-                message:"Password  and confirmPassword value does not match, please try again",
+                message:"Password  and confirmPassword value do not match, please try again",
             });
         }
         const userExists = await User.findOne({email});
         if(userExists){
             return res.status(400).json({
                 success:false,
-                message:"User already registered",
+                message:"User already registered. Please sign-in to continue",
             });
         };
 
@@ -121,16 +125,16 @@ exports.signUpHandler = async(req,res)=>{
 
         //entry create in db
         // create profile
-        const profileDetails = await User.create({gender:null, dateOfBirth:null,
+        const profileDetails = await Profile.create({gender:null, dateOfBirth:null,
         about:null,contactNumber:contactNumber});
         const user =await User.create({
-            firstName,
-            lastName,
-            email,
-            password:hashedPassword,
-            accountType,
-        additionalDetails:profileDetails._id,
-        image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`, 
+                firstName,
+                lastName,
+                email,
+                password:hashedPassword,
+                accountType,
+                additionalDetails:profileDetails._id,
+                image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`, 
         });
         //return res
         res.status(200).json({
@@ -140,7 +144,7 @@ exports.signUpHandler = async(req,res)=>{
         })
     }
     catch(error){
-        console.log(error);
+        console.log(error.message);
         return res.status(500).json({
             success:false,
             message:"User cannot be registered, try again",
@@ -167,7 +171,7 @@ exports.loginHandler = async(req,res) =>{
      if(!user){
         return res.status(401).json({
             success:false,
-            message:"User is not registered, please signup",
+            message:"User is not registered, please signup to Continue",
         });
     };
      //generate jwt after password match
@@ -201,7 +205,7 @@ exports.loginHandler = async(req,res) =>{
             })
         }
    }catch(error){
-        console.log(error);
+        console.log(error.message);
         return res.status(500).json({
             success:false,
             message:"Login failure, please try again",
@@ -212,15 +216,36 @@ exports.loginHandler = async(req,res) =>{
 //change password
 exports.changePassword = async (req,res)=>{
     try{
-        //get data prev password ,new pass, confirmnew pass, email
-        const {email, oldPassword, newPassword, newConfirmPassword} = req.body;
+        //fetch user data
+        const userId = req.user.id;
+        const userDetails = await User.findById(userId);
+
+        //get data prev password ,new pass, confirmnew pass, email        
+        const {oldPassword, newPassword, newConfirmPassword} = req.body;
+
         //validation
-        if(!email || !oldPassword || !newPassword || !newConfirmPassword){
+        if(!userId || !oldPassword || !newPassword || !newConfirmPassword){
             return res.status(403).json({
                 success:false,
                 message:"All fields  are required, please try again"
             })
         }
+        //check if old password is correct
+        const isPasswordMatch = await bcrypt.compare(oldPassword,userDetails.password);
+        if(!isPasswordMatch){
+            return res.status(401).json({
+                success:false,
+                message:"Current password is incorrect",
+            });
+        }
+        //if old password and new password are same
+        if(oldPassword === newPassword){
+			return res.status(400).json({
+				success: false,
+				message: "New Password cannot be same as Old Password",
+			});
+		}
+
         if (newPassword !== newConfirmPassword){
             return res.status(400).json({
                 success:false,
@@ -231,27 +256,40 @@ exports.changePassword = async (req,res)=>{
          const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         //update password in db
-        const updateResult = await User.findOneAndUpdate({email:email},
-            {password:hashedPassword},{new:true});
+        const updateResult = await User.findByIdAndUpdate({_id:userId},
+            {password:hashedPassword},
+            {new:true});
+        
         //send password update mail
-        const mailResponse = await mailSender(email,"User Password Changed",`Password changed for ${email}`);
-        if(!mailResponse){
-            return res.status(500).json({
-                success:false,
-                message:"Error occured while sending mail"
-            })
-        }
+        try{
+            const emailResponse = await mailSender(updateResult.email,
+                            "User Password Updated",
+                            passwordUpdated(
+                                updateResult.email,
+                                `Password updated successfully for  ${updateResult.firstName} ${updateResult.lastName}`
+                            )
+                            );
+            console.log("Email sent Successfully:", emailResponse.response);
+        }catch(error){console.error("Error occurred while sending email:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Error occurred while sending email",
+            error: error.message,
+        });
+    }
+  
         // return response
         res.status(200).json({
             success:true,
-            message:"Password change Successfully",
+            message:"Password updated Successfully",
         });
 
     }catch(error){
-        console.log(error);
+        console.log(error.message);
         return res.status(500).json({
             success:false,
-            message:"Password change failed, Something went wrong",
+            message:"Password update failed, Something went wrong",
+            error:error.message,
         })
     }
 }

@@ -6,7 +6,10 @@ const User = require("../models/User");
 exports.auth = async (req,res,next)=>{
     try{
         //extract token
-        const token = req.cookies.token || req.body.token || req.header("Authorisation").replace("Bearer","");
+        const token = req.cookies.token 
+                    || req.body.token 
+                    || req.header("Authorisation").replace("Bearer","");
+        
         //if token missing return response
         if(!token){
             return res.status(401).json({
@@ -18,7 +21,7 @@ exports.auth = async (req,res,next)=>{
         //verify the token
         try{
             const decode = jwt.verify(token,process.env.JWT_SECRET);
-            console.log(decode);
+            console.log("decode: ", decode);
             req.user = decode;
         }catch(error){
             //verification
@@ -27,7 +30,7 @@ exports.auth = async (req,res,next)=>{
                 message:"token is invalid", 
             })
         }
-         next();
+        next();
     }catch(error){
         return res.status(401).json({
             success:false,
@@ -35,53 +38,57 @@ exports.auth = async (req,res,next)=>{
         })
     }
 }
+
 //isStudent
 exports.isStudent = async (req,res,next)=>{
-  try{
-    if(req.user.role!=="Student"){
-        return res.status(401).json({
+    try{
+        if(req.user.role!=="Student"){
+            return res.status(401).json({
+                success:false,
+                message:"This is a protected route for Students only"
+            })
+        }
+        next();
+    }catch(error){
+        return res.status(500).json({
             success:false,
-            message:"This is a protected route for Students only"
+            message:"User role cannot be verified, please try again",
         })
     }
-  }catch(error){
-    return res.status(500).json({
-        success:false,
-        message:"User role cannot be verified",
-    })
-  }
 
 }
 //isInstructor
 exports.isInstructor = async (req,res,next)=>{
     try{
-      if(req.user.role!=="Instructor"){
-          return res.status(401).json({
-              success:false,
-              message:"This is a protected route for Instructor only"
-          })
-      }
+        if(req.user.role!=="Instructor"){
+            return res.status(401).json({
+                success:false,
+                message:"This is a protected route for Instructor only"
+            })
+        }
+        next();
     }catch(error){
-      return res.status(500).json({
-          success:false,
-          message:"User role cannot be verified",
-      })
+        return res.status(500).json({
+            success:false,
+            message:"User role cannot be verified, please try again",
+        })
     }
   
   }
 //isAdmin
 exports.isAdmin = async (req,res,next)=>{
     try{
-      if(req.user.role!=="Admin"){
-          return res.status(401).json({
-              success:false,
-              message:"This is a protected route for Admin only"
-          })
-      }
+        if(req.user.role!=="Admin"){
+            return res.status(401).json({
+                success:false,
+                message:"This is a protected route for Admin only"
+            })
+        }
+        next();
     }catch(error){
       return res.status(500).json({
           success:false,
-          message:"User role cannot be verified",
+          message:"User role cannot be verified, please try again",
       })
     }
   
