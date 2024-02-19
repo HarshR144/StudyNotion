@@ -5,6 +5,11 @@ import HighlightText from '../components/core/HomePage/HighlightText'
 import CTAButton from '../components/core/HomePage/CTAButton'
 import Banner from "../assets/Images/banner.mp4"
 import CodeBlock  from '../components/core/HomePage/CodeBlock'
+import TimelineSection from '../components/core/HomePage/TimelineSection'
+import LearningLanguageSection from '../components/core/HomePage/LearningLanguageSection'
+import InstructorSection from '../components/core/HomePage/InstructorSection'
+import Footer from '../components/common/Footer'
+import ExploreMore from '../components/core/HomePage/ExploreMore'
 
 
 
@@ -130,13 +135,75 @@ const Home = () => {
 
                 </CodeBlock>
             </div>
+            
+            {/* Explore more section */}
+            <ExploreMore/>
 
         </div>
 
 
         {/* Section2 */}
+        <div className='bg-pure-greys-5 text-richblack-700'>
+                
+                {/* bg-with-grid-image */}
+                <div className='homepage_bg h-[333px] '>
+                    <div className='w-11/12 max-w-maxContent flex flex-col items-center gap-8 mx-auto justify-between'>
+                        <div className='h-[150px]'></div>
+                        
+                        {/* buttons */}
+                        <div className='flex gap-7 text-white '>
+                            <CTAButton active={true} linkto={"/signup"}>
+                               <div className="flex items-center gap-3"> 
+                               Explore Full Catalog
+                                <FaArrowRight/>
+                               </div>
+                            </CTAButton>
+                            <CTAButton active={false} linkto={"/login"}>
+                                <div>Learn more</div>
+                            </CTAButton>
+                        </div>
+                    </div>
+                </div>
+
+                <div className='w-11/12 mx-auto max-w-maxContent flex flex-col items-center justify-between pag-7 '>
+                    
+                    {/* Job in demand section */}
+                    <div className='flex gap-5 mb-10 mt-[95px] '>
+                        <div className='text-4xl font-semibold w-[45%] text-start'>
+                            Get the skills you need for a<HighlightText text={"job that is in demand"}></HighlightText>
+                        </div>
+                        <div className='flex flex-col gap-10 w-[40%] items-start'>
+                            <div className='text-[16px] font-semibold'>
+                                The modern StudyNotion is the dictates its own terms. Today, to be a competitive 
+                                specialist requires more than professional skills.
+                            </div>
+                            <CTAButton active={true} linkto={"/signup"}>Learn More</CTAButton>
+                        </div>
+
+                    </div>
+                    {/* TimelineSection */}
+                    <TimelineSection/>
+
+                    {/* LEarning Language Section */}
+                    <LearningLanguageSection/>
+                </div>
+        </div>
+
         {/* Section3 */}
+        <div className='w-11/12 mx-auto max-w-maxContent flex flex-col items-center justify-between gap-8 first-letter bg-richblack-900
+        text-white '>
+            {/* Become an instructor section */}
+            <InstructorSection/>
+            
+            {/*Review Section*/}
+            <h2 className='text-center text-4xl font-semibold mt-10'>Review from other learners</h2>
+                {/* Review Slider */}
+                
+        </div>
+
+
         {/* Footer */}
+        <Footer/> 
     </div>
   )
 }
