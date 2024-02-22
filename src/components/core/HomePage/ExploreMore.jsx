@@ -21,9 +21,9 @@ const ExploreMore = () => {
     return (
     <div >
         {/* Heading */}
-        <div>
+        <div className='lg:mb-0 mb-4'>
          
-            <div className='text-4xl font-semibold text-center my-10'>
+            <div className='text-4xl font-semibold text-center my-6'>
                 Unlock the <HighlightText text={"Power of Code"}/>
             </div>
             <p className='text-center text-richblack-300 font-semibold mt-1'>Learn to build anything you can imagine</p>    

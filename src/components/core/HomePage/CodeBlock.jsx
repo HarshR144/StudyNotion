@@ -6,11 +6,11 @@ import { TypeAnimation } from 'react-type-animation'
 
 const CodeBlock = ({position,heading,subheading,ctabtn1,ctabtn2,codeblock,codeColor,backgroundGradient}) => {
   return (
-    <div className={`flex ${position} my-20 justify-between gap-10 w-[100%]`}>
+    <div className={`flex ${position} my-20 justify-between gap-10 w-[100%] flex-col`}>
         {/* Section1 */}
         <div className='lg:w-[45%] w-[100%] flex flex-col gap-8'>
             {heading}
-            <div className=' text-richblack-300 font-bold text-base  -mt-3 '>
+            <div className=' text-richblack-300 font-bold text-base w-[85%] -mt-3 '>
                 {subheading}
             </div>
             <div className='flex gap-7 mt-7'>
@@ -27,9 +27,9 @@ const CodeBlock = ({position,heading,subheading,ctabtn1,ctabtn2,codeblock,codeCo
         </div>
 
         {/* Section 2 */}
-        <div className='h-fit code-border flex flex-row text-md w-[100%] py-4 lg:w-[500px] relative' >
+        <div className='h-fit sm:text-sm code-border flex flex-row text-md w-[100%] py-4 lg:w-[500px] relative' >
             {backgroundGradient}
-            <div className='text-center flex flex-col w-[10%] text-richblack-400 font-inter font-bold'>
+            <div className='text-center flex flex-col w-[10%] text-richblack-400 font-inter font-bold select-none'>
                 <p>1</p>
                 <p>2</p>
                 <p>3</p>
@@ -43,8 +43,8 @@ const CodeBlock = ({position,heading,subheading,ctabtn1,ctabtn2,codeblock,codeCo
                 <p>11</p>
             </div>
             {/* code */}
-            <div className={`w-[90%] flex flex-col gap-2 font-bold font-mono ${codeColor} pr-2`}>
-                <TypeAnimation sequence={[codeblock,5000,""]}
+            <div className={`w-[90%] flex flex-col gap-2 font-bold font-mono ${codeColor} pr-1`}>
+                <TypeAnimation sequence={[codeblock,1000,""]}
                 repeat={Infinity}
                 cursor={true}
                 omitDeletionAnimation
