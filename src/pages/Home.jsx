@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {FaArrowRight} from "react-icons/fa"
+
+//imported components
 import HighlightText from '../components/core/HomePage/HighlightText'
 import CTAButton from '../components/core/HomePage/CTAButton'
 import Banner from "../assets/Images/banner.mp4"
@@ -11,15 +12,15 @@ import InstructorSection from '../components/core/HomePage/InstructorSection'
 import Footer from '../components/common/Footer'
 import ExploreMore from '../components/core/HomePage/ExploreMore'
 
-
-
+//imported icons
+import {FaArrowRight} from "react-icons/fa"
 
 const Home = () => {
   return (
     <div>
         {/* Section1 */}
         <div className='relative mx-auto flex flex-col w-11/12 max-w-maxContent items-center justify-between text-white gap-8'>
-            {/* signup Btn */}
+            {/* Instructor Btn */}
             <Link to={"/signup"}>
                 <div className=' group mt-16 p-1 mx-auto rounded-full bg-richblack-800 font-bold text-richblack-200
                 transition-all duration-200 hover:scale-95 w-fit drop-shadow-[0_1.5px_rgba(255,255,255,0.25)] hover:drop-shadow-none'>
@@ -148,10 +149,10 @@ const Home = () => {
                 {/* bg-with-grid-image */}
                 <div className='homepage_bg h-[333px] '>
                     <div className='w-11/12 max-w-maxContent flex flex-col items-center gap-8 mx-auto justify-between'>
-                        <div className='h-[150px]'></div>
+                        <div className='lg:h-[150px]'></div>
                         
                         {/* buttons */}
-                        <div className='flex gap-7 text-white '>
+                        <div className='flex gap-7 text-white lg:mt-8'>
                             <CTAButton active={true} linkto={"/signup"}>
                                <div className="flex items-center gap-3"> 
                                Explore Full Catalog
@@ -165,14 +166,14 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className='w-11/12 mx-auto max-w-maxContent flex flex-col items-center justify-between pag-7 '>
+                <div className='w-11/12 mx-auto max-w-maxContent flex flex-col items-center justify-between gap-8 '>
                     
                     {/* Job in demand section */}
-                    <div className='flex gap-5 mb-10 mt-[95px] '>
-                        <div className='text-4xl font-semibold w-[45%] text-start'>
+                    <div className='flex flex-col mb-10 lg:mt-20 lg:flex-row  mt-[-100px] justify between  gap-7 '>
+                        <div className='text-4xl font-semibold lg:w-[45%] text-start'>
                             Get the skills you need for a<HighlightText text={"job that is in demand"}></HighlightText>
                         </div>
-                        <div className='flex flex-col gap-10 w-[40%] items-start'>
+                        <div className='flex flex-col gap-10 lg:w-[40%] items-start'>
                             <div className='text-[16px] font-semibold'>
                                 The modern StudyNotion is the dictates its own terms. Today, to be a competitive 
                                 specialist requires more than professional skills.
@@ -191,12 +192,12 @@ const Home = () => {
 
         {/* Section3 */}
         <div className='w-11/12 mx-auto max-w-maxContent flex flex-col items-center justify-between gap-8 first-letter bg-richblack-900
-        text-white '>
+        text-white my-20'>
             {/* Become an instructor section */}
             <InstructorSection/>
             
             {/*Review Section*/}
-            <h2 className='text-center text-4xl font-semibold mt-10'>Review from other learners</h2>
+            <h2 className='text-center text-4xl font-semibold mt-8'>Review from other learners</h2>
                 {/* Review Slider */}
                 
         </div>
