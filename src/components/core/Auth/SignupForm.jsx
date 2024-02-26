@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 import { ACCOUNT_TYPE } from '../../../constants';
@@ -50,7 +50,7 @@ const SignupForm = () => {
     // Send OTP to user for verification
     dispatch(sendOtp(formData.email, navigate))
 
-    // Reset
+    // Reset 
     setFormData({
       firstName: "",
       lastName: "",
@@ -96,7 +96,7 @@ const SignupForm = () => {
                     style={{
                         boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
                     }}
-                    className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
+                    className="focus:outline-none w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
                     />
                 </label>
                 <label>
@@ -113,7 +113,7 @@ const SignupForm = () => {
                     style={{
                         boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
                     }}
-                    className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
+                    className="focus:outline-none w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
                     />
                 </label>
                 </div>
@@ -131,7 +131,7 @@ const SignupForm = () => {
                     style={{
                     boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
                     }}
-                    className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
+                    className="focus:outline-none w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
                 />
                 </label>
                 <div className="flex gap-x-4">
@@ -149,7 +149,7 @@ const SignupForm = () => {
                     style={{
                         boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
                     }}
-                    className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] pr-10 text-richblack-5"
+                    className="focus:outline-none w-full rounded-[0.5rem] bg-richblack-800 p-[12px] pr-10 text-richblack-5"
                     />
                     <span
                     onClick={() => setShowPassword((prev) => !prev)}
@@ -176,7 +176,7 @@ const SignupForm = () => {
                     style={{
                         boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
                     }}
-                    className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] pr-10 text-richblack-5"
+                    className="focus:outline-none w-full rounded-[0.5rem] bg-richblack-800 p-[12px] pr-10 text-richblack-5"
                     />
                     <span
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
