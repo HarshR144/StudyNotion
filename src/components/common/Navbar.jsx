@@ -3,12 +3,12 @@ import { Link, matchPath, useLocation } from 'react-router-dom'
 import Logo from "../../assets/Logo/Logo-Full-Light.png"
 import {NavbarLinks} from "../../data/navbar-links"
 import { useSelector } from 'react-redux'
-import { INSTRUCTOR } from '../../constants'
 import {AiOutlineShoppingCart ,AiOutlineMenu} from "react-icons/ai"
 import ProfileDropDown from '../core/Auth/ProfileDropDown'
 import { apiConnector } from '../../services/apiConnector'
 import { categories } from '../../services/apis'
 import { MdArrowDropDown } from "react-icons/md";
+import { ACCOUNT_TYPE } from '../../utils/constants'
 const subLink = [
     {
         title:"python",
@@ -28,7 +28,9 @@ const Navbar = () => {
     const {totalItems} = useSelector((state)=>state.cart);
     const [subLinks,setSubLinks] = useState([]);
     const [loading,setLoading] = useState(false);
-
+    useEffect(()=>{
+    console.log(user);
+})
     const fetchSublinks = async()=>{
         try{
             const result = await apiConnector("GET",categories.CATEGORIES_API);
@@ -126,20 +128,17 @@ const Navbar = () => {
 
                 {/* login/signup/dashboard */}
                 <div className='md:flex hidden gap-x-4 items-center'>
-                    {
-                        user && user?.role !==INSTRUCTOR && (
-                            <Link to={"/dashboard/cart"} className="relative">
-                                <AiOutlineShoppingCart className='text-2xl text-richblack-100'/>
-                                {
-                                    totalItems > 0 && (
-                                        <span className='absolute -bottom-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100'
-                                        >{totalItems}</span>
-                                    )
-                                }
-                               
-                            </Link>
-                        )
-                    }
+                        
+                    {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
+                        <Link to="/dashboard/cart" className="relative">
+                        <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
+                        {totalItems > 0 && (
+                            <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100">
+                            {totalItems}
+                            </span>
+                        )}
+                        </Link>
+                    )}
                     {
                         token===null && (
                             <Link to={"/login"}>
