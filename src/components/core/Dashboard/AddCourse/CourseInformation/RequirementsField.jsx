@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
 const RequirementsField = ({name,label,register,errors,setValue,getValue }) => {
     
+    const { editCourse, course } = useSelector((state) => state.course)
     const [requirement,setRequirement] = useState("");
     const [requirementList,setRequirementList] = useState([]);
     
     const handleAddRequirement= ()=>{
-        if(requirement){
-            setRequirementList([...requirementList,requirement]);
-            setRequirement("");
-        }
+        if (requirement) {
+            setRequirementList([...requirementList, requirement])
+            setRequirement("")
+  
+          }
     }
 
     const handleRemoveRequirement = (index)=>{
         const updatedRequirementList = [...requirementList];
         updatedRequirementList.splice(index,1);
         setRequirementList(updatedRequirementList);
+       
     }
 
 
     useEffect(()=>{
+        if (editCourse) {
+            setRequirementList(course?.instructions)
+          }
         register(name,{
                         required:true,
                         validate:(value)=>value.length > 0    
@@ -60,12 +67,12 @@ const RequirementsField = ({name,label,register,errors,setValue,getValue }) => {
                 requirementList.length > 0 && (
                     <ul className='mt-2 list-inside list-disc'>
                         {
-                            requirementList.map((req, index)=>(
+                            requirementList.map((requirement, index)=>(
                                 <li key={index} className='flex items-center text-richblack-5'>
-                                    <span>{req}</span>
+                                    <span>{requirement}</span>
                                     <button 
                                     type='button' 
-                                    onClick={handleRemoveRequirement(index)} 
+                                    onClick={()=>handleRemoveRequirement(index)} 
                                     className='ml-2 text-xs text-pure-greys-300'>
                                         clear
                                     </button>

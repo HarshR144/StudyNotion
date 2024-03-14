@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
-import {fetchCourseCategories} from "../../../../../services/operations/courseDetailsAPI"
+import {addCourseDetails, editCourseDetails, fetchCourseCategories} from "../../../../../services/operations/courseDetailsAPI"
 import {HiOutlineCurrencyRupee} from "react-icons/hi"
 import { MdNavigateNext } from "react-icons/md"
 import RequirementsField from './RequirementsField'
-import { setStep } from '../../../../../slices/courseSlice'
+import { setCourse, setStep } from '../../../../../slices/courseSlice'
 import IconBtn from "../../../../common/IconBtn"
 import Upload from "../Upload"
 import ChipInput from "./ChipInput"
+import toast from 'react-hot-toast'
+import { COURSE_STATUS } from "../../../../../utils/constants"
 
 const CourseInformationForm = () => {
     const {
@@ -21,6 +23,7 @@ const CourseInformationForm = () => {
 
     const dispatch = useDispatch();
     const{course, editCourse} = useSelector((state)=>state.course);
+    const { token } = useSelector((state) => state.auth)
     const [loading, setLoading] = useState(false);
     const [courseCategories, setCourseCategories] = useState([]);
     useEffect(()=>{
@@ -102,8 +105,40 @@ const CourseInformationForm = () => {
                 if (currentValues.courseImage !== course.thumbnail) {
                   formData.append("thumbnailImage", data.courseImage)
                 }
+
+                setLoading(true);
+                const result = await editCourseDetails(formData,token);
+                setLoading(false);
+                if(result){
+                    dispatch(setStep(2));
+                    dispatch(setCourse(result));
+                }
         }
+        else{
+            toast.error("No changes made to the form");
+        }
+        return;
     }
+    // create a new course
+    const formData = new FormData();
+    formData.append("courseName", data.courseTitle)
+    formData.append("courseDescription", data.courseShortDesc)
+    formData.append("price", data.coursePrice)
+    formData.append("tag", JSON.stringify(data.courseTags))
+    formData.append("whatYouWillLearn", data.courseBenefits)
+    formData.append("category", data.courseCategory)
+    formData.append("status", COURSE_STATUS.DRAFT)
+    formData.append("instructions", JSON.stringify(data.courseRequirements))
+    formData.append("thumbnailImage", data.courseImage);
+
+    setLoading(true);
+    const result = await addCourseDetails(formData,token);
+    if(result){
+        dispatch(setStep(2));
+        dispatch(setCourse(result));
+    }
+    setLoading(false);
+}
     return (
         <form onSubmit={handleSubmit(onSubmit)}
         className='rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6 space-y-8'>
@@ -237,7 +272,7 @@ const CourseInformationForm = () => {
                 )}
             </div>
 
-
+        {/* Requirement field */}
            <RequirementsField
                 name="courseRequirements"
                 label="Requirements/Instructions"
@@ -261,6 +296,7 @@ const CourseInformationForm = () => {
                 />
             </div>
         </form>
-  )}
+  )
 }
+
 export default CourseInformationForm
