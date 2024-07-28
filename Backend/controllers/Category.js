@@ -89,8 +89,8 @@ exports.categoryPageDetails = async (req,res)=>{
 
         //get top 10 selling courses
         const allCategories = await Course.find({});
-        const topCourses = allCategories.courses.sort((a,b)=>b.enrolledStudents.length -a.enrolledStudents.length).sclice(0,10);
-        //return rsponse
+        const topCourses = allCategories.courses.sort((a,b)=>b.enrolledStudents.length -a.enrolledStudents.length).slice(0,10);
+        //return response
         return res.status(200).json({
             success:true,
             message:'Category Page details returned successfully',

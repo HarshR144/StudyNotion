@@ -26,7 +26,7 @@ exports.resetPasswordToken = async(req,res)=>{
                                                             },
                                                             {new:true});
 
-        //create url
+        //create url (TOCHANGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE WHEN DEPLOYING)
         const url = `http://localhost:3000/update-password/${token}`;
 
         //send mail containing url
@@ -69,10 +69,13 @@ exports.resetPassword = async(req,res)=>{
                 message:"All fields  are required, please try again"
             })
         }
+
+        // now you have to update password in user in DB but how will you find user ??? 
+        // we will use the token this token is saved in user db which can be used to find user in db
         //get user details from db using token
         const userDetails = await User.findOne({token:token});
         
-        //if no entry invalid token or token used
+        //if no entry invalid token or token used 
         if(!userDetails){
             return res.status(401).json({
                 success:false,

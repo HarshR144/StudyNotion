@@ -63,10 +63,11 @@ exports.sendOTP = async (req,res)=>{
 }
 
 
+// Signup Controller for Registering USers
 
 
 //sign up handler
-exports.signUpHandler = async(req,res)=>{
+exports.signUp= async(req,res)=>{
     try{
             //fect data from req body
         const {
@@ -103,8 +104,8 @@ exports.signUpHandler = async(req,res)=>{
 
         //find most recent otp from db
         const recentOtp = await OTP.find({email}).sort({createdAt:-1}).limit(1);
-        console.log("Recent OTP: ",recentOtp);
-        
+        // console.log("Recent OTP: ",recentOtp);
+        console.log("otp user:",otp,"opt db: ", recentOtp[0].otp);
         //validate otp
         if(recentOtp.length == 0){
             return res.status(400).json(
@@ -114,7 +115,8 @@ exports.signUpHandler = async(req,res)=>{
                 }
             )
         }
-        else if(otp !== recentOtp.otp){
+        
+        else if (otp !==recentOtp[0].otp) {
             return res.status(400).json({
                 success:false,
                 message:"Invalid OTP"
@@ -125,8 +127,12 @@ exports.signUpHandler = async(req,res)=>{
 
         //entry create in db
         // create profile
-        const profileDetails = await Profile.create({gender:null, dateOfBirth:null,
-        about:null,contactNumber:contactNumber});
+        const profileDetails = await Profile.create({
+            gender:null,
+            dateOfBirth:null,
+            about:null,
+            contactNumber:contactNumber
+        });
         const user =await User.create({
                 firstName,
                 lastName,
@@ -134,7 +140,7 @@ exports.signUpHandler = async(req,res)=>{
                 password:hashedPassword,
                 accountType,
                 additionalDetails:profileDetails._id,
-                image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`, 
+                image:`https://api.dicebear.com/5.x/initials/svg?seed=${firstName}%20${lastName}`, 
         });
         //return res
         res.status(200).json({
@@ -154,7 +160,7 @@ exports.signUpHandler = async(req,res)=>{
 
 //login handler
 
-exports.loginHandler = async(req,res) =>{
+exports.login = async(req,res) =>{
    try{
      //fetch data from req body
      const {email,password}= req.body;
@@ -179,7 +185,7 @@ exports.loginHandler = async(req,res) =>{
             const payload = {
                 email:user.email,
                 id:user._id,
-                role:user.accountType,
+                // accountType:user.accountType,
             }
             const token = jwt.sign(payload,process.env.JWT_SECRET,{
                 expiresIn:"2h",
@@ -191,7 +197,7 @@ exports.loginHandler = async(req,res) =>{
                 expires: new Date(Date.now()+ 3*24*60*60*1000),
                 httpOnly:true,
             }
-            res.cookie("token",token,Options).status(200).json({
+            res.cookie("token",token,options).status(200).json({
                 success:true,
                 token,
                 user,

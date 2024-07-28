@@ -49,7 +49,12 @@ const courseSchema = new mongoose.Schema({
     status:{
         type:String,
         enum:["Draft","Pending","Published"]
-    }
+    },
+    // createdAt: {
+	// 	type:Date,
+	// 	default:Date.now
+	// },
+
 },{timestamps:true})
 
 module.exports = mongoose.model("Course",courseSchema);

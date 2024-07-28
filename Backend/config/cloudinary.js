@@ -2,6 +2,7 @@ const cloudinary = require("cloudinary");
 require("dotenv").config();
 exports.cloudinaryConnect = ()=>{
     try{
+        // Configuring the Cloudinary to Upload MEDIA
         cloudinary.config({
             cloud_name:process.env.CLOUD_NAME,
             api_key:process.env.API_KEY,
