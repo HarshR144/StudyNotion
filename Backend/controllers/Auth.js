@@ -107,7 +107,7 @@ exports.signUp= async(req,res)=>{
         // console.log("Recent OTP: ",recentOtp);
         console.log("otp user:",otp,"opt db: ", recentOtp[0].otp);
         //validate otp
-        if(recentOtp.length == 0){
+        if(recentOtp.length === 0){
             return res.status(400).json(
                 {
                     success:false,

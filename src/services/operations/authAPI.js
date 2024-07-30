@@ -63,6 +63,7 @@ export function login(email, password, navigate){
 
 
 export function sendOtp(email,navigate){
+    console.log()
     return async(dispatch)=>{
         const toastId = toast.loading("Loading...");
         dispatch(setLoading(true));
