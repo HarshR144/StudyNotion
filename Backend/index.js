@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
     cors({
-        origin:"http://localhost:3000",
+        origin:"http://localhost:3000",   //change on deploy
         credentials:true,
         maxAge:14400
     })
@@ -39,7 +39,7 @@ app.use("/api/v1/profile",profileRoutes);
 app.use("/api/v1/course",courseRoutes);
 app.use("/api/v1/contactus",contactUsRoutes);
 app.use("/api/v1/payment",paymentRoutes);
-
+app.use("/api/v1/reach", contactUsRoutes);
 // def route
 app.get("/",(req,res)=>{
     return res.json({

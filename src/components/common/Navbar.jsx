@@ -31,21 +31,21 @@ const Navbar = () => {
     useEffect(()=>{
     console.log(user);
 })
-    const fetchSublinks = async()=>{
-        try{
-            const result = await apiConnector("GET",categories.CATEGORIES_API);
-            setSubLinks(result.data.data);
-            console.log(result);
-        }catch(error){
-            console.log(error.message);
-        }
-    }
-    useEffect(()=>{
-        // setLoading(true);
-        fetchSublinks(); 
-        // setLoading(false);   
-        console.log(subLinks);
-    },[])
+    // const fetchSublinks = async()=>{
+    //     try{
+    //         const result = await apiConnector("GET",categories.CATEGORIES_API);
+    //         setSubLinks(result.data.data);
+    //         console.log(result);
+    //     }catch(error){
+    //         console.log(error.message);
+    //     }
+    // }
+    // useEffect(()=>{
+    //     // setLoading(true);
+    //     // fetchSublinks(); 
+    //     // setLoading(false);   
+    //     // console.log(subLinks);
+    // },[subLinks])
 
     const location = useLocation();
     const matchRoute = (route)=>{

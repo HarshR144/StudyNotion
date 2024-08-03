@@ -40,13 +40,19 @@ const Sidebar = () => {
                         })
                     }
                 </div>
+
+                {/* seperator  */}
                 <div className='mx-auto mt-6 mb-6 h-[1px] w-10/12 bg-richblack-700'></div>
+                
                 {/* Settings and logout btn */}
                 <div className='flex flex-col'>
+                    {/* settings*/}
                     <SidebarLink
                         link={{name:"Settings", path:"/dashboard/settings"}}
                         iconName={"VscSettingsGear"}
                     />
+
+                    {/* Logout Button */}
                     <button
                         onClick={()=>
                             setConfirmationModal({

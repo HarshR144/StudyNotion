@@ -18,6 +18,7 @@ const {
   
 export function logout(navigate){
     return(dispatch)=>{
+        console.log("Inside Logout")
         dispatch(setToken(null));
         dispatch(setUser(null));
         dispatch(resetCart());
