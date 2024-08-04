@@ -183,7 +183,21 @@ details > summary::-webkit-details-marker {
 }
 
 
+/* Buttons */
+.yellowButton {
+  @apply cursor-pointer rounded-md bg-yellow-50 px-[20px] py-[8px] font-semibold text-richblack-900;
+}
 
+/* For conditional coloring of icons in dashboard sidebar */
+.active-icon {
+  fill: #ffd60a !important;
+  color: #ffd60a !important;
+}
+
+.inactive-icon {
+  fill: #838894;
+  color: #838894;
+}
 /* https://10015.io/tools/css-loader-generator */
 .spinner {
   width: 56px;
@@ -291,3 +305,4 @@ details > summary::-webkit-details-marker {
     transform: scaleY(-1) rotate(-135deg);
   }
 }
+

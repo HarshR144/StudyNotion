@@ -1,23 +1,43 @@
-import { Route,Routes } from 'react-router-dom';
+import { useEffect } from 'react';
 import './App.css';
-import Home from './pages/Home';
-import Navbar from './components/common/Navbar';
-import Contact from './pages/Contact';
-import Signup from "./pages/Signup"
+// Components
+import Navbar from "./components/common/Navbar"
+import OpenRoute from "./components/core/Auth/OpenRoute"
+import PrivateRoute from "./components/core/Auth/PrivateRoute"
+import AddCourse from "./components/core/Dashboard/AddCourse"
+import Cart from "./components/core/Dashboard/Cart"
+import EditCourse from "./components/core/Dashboard/EditCourse"
+import EnrolledCourses from "./components/core/Dashboard/EnrolledCourses"
+import Instructor from "./components/core/Dashboard/Instructor"
+import MyCourses from "./components/core/Dashboard/MyCourses"
+import MyProfile from "./components/core/Dashboard/MyProfile"
+import Settings from "./components/core/Dashboard/Settings"
+import VideoDetails from "./components/core/ViewCourse/VideoDetails"
+import About from "./pages/About"
+import Catalog from "./pages/Catalog"
+import Contact from "./pages/Contact"
+import CourseDetails from "./pages/CourseDetails"
+import Dashboard from "./pages/Dashboard"
+import Error from "./pages/Error"
+import ForgotPassword from "./pages/ForgotPassword"
+// Pages
+import Home from "./pages/Home"
 import Login from "./pages/Login"
-import OpenRoute from './components/core/Auth/OpenRoute';
-import ForgotPassword from './pages/ForgotPassword';
-import VerifyEmail from './pages/VerifyEmail';
-import UpdatePassword from './pages/UpdatePassword'
-import About from './pages/About';
-import Dashboard from './pages/Dashboard';
-import PrivateRoute from './components/core/Auth/PrivateRoute'
-import MyProfile from './components/core/Dashboard/MyProfile';
-import Error from './pages/Error';
-import Settings from './components/core/Dashboard/Settings/index'
-import EnrolledCourses from './components/core/Dashboard/EnrolledCourses';
+import Signup from "./pages/Signup"
+import UpdatePassword from "./pages/UpdatePassword"
+import VerifyEmail from "./pages/VerifyEmail"
+import ViewCourse from "./pages/ViewCourse"
+import { getUserDetails } from "./services/operations/profileAPI"
+import { ACCOUNT_TYPE } from "./utils/constants"
+
+// Redux
+import { useDispatch, useSelector } from "react-redux"
+// React Router
+import { Route, Routes, useNavigate } from "react-router-dom"
 
 function App() {
+    const {user} = useSelector((state)=> state.profile);
+   
     return (
       <div className=" w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
           <Navbar/>
@@ -25,6 +45,8 @@ function App() {
                 <Route path='/' element={<Home/>}/>
                 <Route path="contact" element={<Contact />} />
                 <Route path='about' element={<About/>}/>
+                <Route path="courses/:courseId" element={<CourseDetails />} />
+                <Route path="catalog/:catalogName" element={<Catalog />} />
 
                 <Route path='signup' element={
                                     <OpenRoute>
@@ -59,10 +81,52 @@ function App() {
                 >
                     <Route path='dashboard/my-profile' element={<MyProfile/>}/>
                     <Route path='dashboard/settings' element={<Settings/>}/>
-                    <Route path='dashboard/enrolled-courses' element={<EnrolledCourses/>}/>
+
+                    {
+                        user?.accountType === ACCOUNT_TYPE.STUDENT && (
+                            <>
+                                <Route path='dashboard/enrolled-courses' element={<EnrolledCourses/>}/>
+                                <Route path='dashboard/cart' element={<Cart/>}/>
+                            </>
+                        )
+                    }
+                    {
+                        user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
+                            <>
+                                <Route path="dashboard/instructor" element={<Instructor />} />
+                                <Route path='dashboard/my-courses' element={<MyCourses/>}/>
+                                <Route path='dashboard/add-course' element={<AddCourse/>}/>
+                                <Route
+                                    path="dashboard/edit-course/:courseId"
+                                    element={<EditCourse />}
+                                />
+                            </>
+                        )
+                    }
                     <Route path='dashboard/:page' element={<Error/>}/>
                     
                 </Route>
+
+                 {/* For the watching course lectures */}
+                <Route
+                element={
+                    <PrivateRoute>
+                    <ViewCourse />
+                    </PrivateRoute>
+                }
+                >
+                {user?.accountType === ACCOUNT_TYPE.STUDENT && (
+                    <>
+                    <Route
+                        path="view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
+                        element={<VideoDetails />}
+                    />
+                    </>
+                )}
+                </Route>
+
+                {/* 404 Page */}
+                <Route path="*" element={<Error />} />
              
           </Routes>
       </div>
