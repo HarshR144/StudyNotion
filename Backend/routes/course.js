@@ -48,6 +48,8 @@ const {
   updateCourseProgress,
   getProgressPercentage,
 } = require("../controllers/courseProgress")
+
+const {enrollStudents} = require('../controllers/Payments')
 // Importing Middlewares
 const { auth, isInstructor, isStudent, isAdmin } = require("../middlewares/auth")
 
@@ -94,7 +96,7 @@ router.delete("/deleteCourse", deleteCourse)
 router.post("/createCategory", auth, isAdmin, createCategory)
 router.get("/showAllCategories", showAllCategories)
 router.post("/getCategoryPageDetails", categoryPageDetails)
-
+router.post("/enroll",enrollStudents)
 // ********************************************************************************************************
 //                                      Rating and Review
 // ********************************************************************************************************

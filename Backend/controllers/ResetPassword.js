@@ -27,7 +27,8 @@ exports.resetPasswordToken = async(req,res)=>{
                                                             {new:true});
 
         //create url (TOCHANGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE WHEN DEPLOYING)
-        const url = `http://localhost:3000/update-password/${token}`;
+        // const url = `http://localhost:3000/update-password/${token}`;
+        const url = `https://studynotion-edtech-project.vercel.app/update-password/${token}`
 
         //send mail containing url
         await mailSender(email,"Password Reset Link",`Password reset link: ${url}`);
@@ -40,15 +41,14 @@ exports.resetPasswordToken = async(req,res)=>{
 
 
     
-    }catch(error){
-        console.log(error);
-        return res.status(500).json({
-            success:false,
-            message:"Something went wrong while reseting password",
+    } catch (error) {
+        return res.json({
+          error: error.message,
+          success: false,
+          message: `Some Error in Sending the Reset Message`,
         })
+      }
     }
-}
-
 
 //Reset password  (resets password in Db)
 exports.resetPassword = async(req,res)=>{

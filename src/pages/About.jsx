@@ -9,6 +9,7 @@ import Quote from "../components/core/AboutPage/Quote"
 import StatsComponenet from "../components/core/AboutPage/Stats"
 import HighlightText from '../components/core/HomePage/HighlightText'
 import Footer from "../components/common/Footer"
+import ReviewSlider from '../components/common/ReviewSlider'
 const About = () => {
     return (
         <div>
@@ -122,12 +123,13 @@ const About = () => {
 
             {/* Reviews section */}
             <div className="relative mx-auto my-20 flex w-11/12 max-w-maxContent flex-col items-center justify-between gap-8 bg-richblack-900 text-white">
-                {/* Reviws from Other Learner */}
-                <h1 className="text-center text-4xl font-semibold mt-8">
-                    Reviews from other learners
-                </h1>
-                {/* ReviewSlider */}
                 
+            </div>
+            {/* Reviws from Other Learner */}
+                
+            <div className=' mb-16 mt-3'>
+                <h2 className='text-center text-2xl md:text-4xl font-semibold mt-8 text-richblack-5 mb-5'>Reviews from other learners</h2>
+                <ReviewSlider />
             </div>
 
             {/* Footer */}

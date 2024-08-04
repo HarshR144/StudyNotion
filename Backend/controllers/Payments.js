@@ -35,7 +35,7 @@ exports.capturePayment = async (req, res) => {
 
       // Check if the user is already enrolled in the course
       const uid = new mongoose.Types.ObjectId(userId)
-      if (course.studentsEnroled.includes(uid)) {
+      if (course.studentsEnrolled.includes(uid)) {
         return res
           .status(200)
           .json({ success: false, message: "Student is already Enrolled" })
@@ -137,8 +137,6 @@ exports.sendPaymentSuccessEmail = async (req, res) => {
       .json({ success: false, message: "Could not send email" })
   }
 }
-
-// enroll the student in the courses
 const enrollStudents = async (courses, userId, res) => {
   if (!courses || !userId) {
     return res
@@ -151,7 +149,7 @@ const enrollStudents = async (courses, userId, res) => {
       // Find the course and enroll the student in it
       const enrolledCourse = await Course.findOneAndUpdate(
         { _id: courseId },
-        { $push: { studentsEnroled: userId } },
+        { $push: { studentsEnrolled: userId } },
         { new: true }
       )
 
@@ -163,7 +161,7 @@ const enrollStudents = async (courses, userId, res) => {
       console.log("Updated course: ", enrolledCourse)
 
       const courseProgress = await CourseProgress.create({
-        courseID: courseId,
+        courseId: courseId,
         userId: userId,
         completedVideos: [],
       })
@@ -196,4 +194,31 @@ const enrollStudents = async (courses, userId, res) => {
       return res.status(400).json({ success: false, error: error.message })
     }
   }
+}
+// enroll the student in the courses
+exports.enrollStudents = async (req, res) => {
+  const {courseId, userId} = req.body;
+  if (!courseId || !userId) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Please Provide Course ID and User ID" })
+  }
+
+    try {
+      // Find the course and enroll the student in it
+
+      const courseProgress = await CourseProgress.create({
+        courseId: courseId,
+        userId: userId,
+        completedVideos: [],
+      })
+      res.status(200).json({
+        success: true,
+        message: "Section created successfully",
+        courseProgress,
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(400).json({ success: false, error: error.message })
+    }
 }

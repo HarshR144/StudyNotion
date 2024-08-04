@@ -14,6 +14,7 @@ import ExploreMore from '../components/core/HomePage/ExploreMore'
 
 //imported icons
 import {FaArrowRight} from "react-icons/fa"
+import ReviewSlider from '../components/common/ReviewSlider'
 
 const Home = () => {
   return (
@@ -196,12 +197,13 @@ const Home = () => {
             {/* Become an instructor section */}
             <InstructorSection/>
             
-            {/*Review Section*/}
-            <h2 className='text-center text-4xl font-semibold mt-8'>Review from other learners</h2>
-                {/* Review Slider */}
+          
                 
         </div>
-
+        <div className=' mb-16 mt-3'>
+            <h2 className='text-center text-2xl md:text-4xl font-semibold mt-8 text-richblack-5 mb-5'>Reviews from other learners</h2>
+            <ReviewSlider />
+        </div>
 
         {/* Footer */}
         <Footer/> 
