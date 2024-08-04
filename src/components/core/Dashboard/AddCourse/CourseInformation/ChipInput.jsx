@@ -1,9 +1,12 @@
+// Importing React hook for managing component state
 import { useEffect, useState } from "react"
+// Importing React icon component
 import { MdClose } from "react-icons/md"
 import { useSelector } from "react-redux"
 
+// Defining a functional component ChipInput
 export default function ChipInput({
-
+  // Props to be passed to the component
   label,
   name,
   placeholder,
@@ -13,11 +16,13 @@ export default function ChipInput({
   getValues,
 }) {
   const { editCourse, course } = useSelector((state) => state.course)
+
+  // Setting up state for managing chips array
   const [chips, setChips] = useState([])
 
   useEffect(() => {
     if (editCourse) {
-      
+      // console.log(course)
       setChips(course?.tag)
     }
     register(name, { required: true, validate: (value) => value.length > 0 })
@@ -47,14 +52,14 @@ export default function ChipInput({
     }
   }
 
-  // handle deletion of a chip
+  // Function to handle deletion of a chip
   const handleDeleteChip = (chipIndex) => {
     // Filter the chips array to remove the chip with the given index
     const newChips = chips.filter((_, index) => index !== chipIndex)
     setChips(newChips)
   }
 
-  
+  // Render the component
   return (
     <div className="flex flex-col space-y-2">
       {/* Render the label for the input */}
