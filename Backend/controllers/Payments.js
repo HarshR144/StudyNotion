@@ -10,6 +10,91 @@ const {
 const { paymentSuccessEmail } = require("../mail/templates/paymentSuccessEmail")
 const CourseProgress = require("../models/CourseProgress")
 
+
+
+exports.mockPurchaseCourse = async (req, res) => {
+  const { courses } = req.body
+  const userId = req.user.id
+
+  if (!courses || courses.length === 0) {
+    return res.json({ success: false, message: "Please Provide Course ID" })
+  }
+
+  let total_amount = 0
+
+  // Validate courses and calculate total
+  for (const course_id of courses) {
+    let course
+    try {
+      course = await Course.findById(course_id)
+
+      if (!course) {
+        return res
+          .status(200)
+          .json({ success: false, message: "Could not find the Course" })
+      }
+
+      // Check if the user is already enrolled in the course
+      const uid = new mongoose.Types.ObjectId(userId)
+      if (course.studentsEnrolled.includes(uid)) {
+        return res
+          .status(200)
+          .json({ success: false, message: "Student is already Enrolled" })
+      }
+
+      total_amount += course.price
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({ success: false, message: error.message })
+    }
+  }
+
+  // Generate mock payment details
+  const mockPaymentData = {
+    orderId: `mock_order_${Date.now()}`,
+    paymentId: `mock_payment_${Date.now()}`,
+    amount: total_amount
+  }
+
+  try {
+    // Directly enroll students (bypassing payment verification)
+    await enrollStudents(courses, userId, res)
+    
+    // Send payment success email with mock data
+    await sendMockPaymentSuccessEmail(userId, mockPaymentData)
+
+    return res.status(200).json({
+      success: true,
+      message: "Course purchased successfully (Mock Payment)",
+      data: mockPaymentData
+    })
+  } catch (error) {
+    console.log(error)
+    return res
+      .status(500)
+      .json({ success: false, message: "Could not complete purchase." })
+  }
+}
+
+
+const sendMockPaymentSuccessEmail = async (userId, paymentData) => {
+  try {
+    const enrolledStudent = await User.findById(userId)
+
+    await mailSender(
+      enrolledStudent.email,
+      `Payment Received - Mock Purchase`,
+      paymentSuccessEmail(
+        `${enrolledStudent.firstName} ${enrolledStudent.lastName}`,
+        paymentData.amount,
+        paymentData.orderId,
+        paymentData.paymentId
+      )
+    )
+  } catch (error) {
+    console.log("error in sending mock payment email", error)
+  }
+}
 // Capture the payment and initiate the Razorpay order
 exports.capturePayment = async (req, res) => {
   const { courses } = req.body
